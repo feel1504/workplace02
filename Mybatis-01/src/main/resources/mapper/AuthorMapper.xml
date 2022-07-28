@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gzsxy.blog.dao.AuthorDao">
+    <!--mybatis二级缓存默认时要开启，需要在Mapper.xml下添加<cache/>标签-->
+    <!--
+        readOnly默认false，同样的查询，内容一致，但是返回的是不同对象，更安全
+        readOnly为true，同样查询，内容一致，返回对像一样，不安全
+    -->
+    <cache readOnly="true"/>
+    <!--修改 -->
+    <select id="findObjectById" resultType="cn.gzsxy.blog.pojo.Author">
+        select * from author where id=#{id}
+    </select>
+    <update id="updateObjectById">
+        update author set
+        phone=#{phone},email=#{email},modifiedTime=now()
+        where id=#{id}
+    </update>
+    <!--插入-->
+    <insert id="insertById" parameterType="cn.gzsxy.blog.pojo.Author">
+        insert into author values(null,#{username},#{password},#{nickname},#{email},#{phone},#{bio},now(),now())
+    </insert>
+    <!--删除-->
+    <delete id="deleteById" parameterType="map">
+        delete from author where id=#{io}
+    </delete>
+    <!--分页-->
+    <select id="selectByLimit" resultType="cn.gzsxy.blog.pojo.Author">
+        select * from author limit #{start},#{end}
+    </select>
+    <!--删除多条-->
+    <delete id="deleteByIds">
+        delete from author where id in
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cy.pj.sys.dao.SysMenusDao">
+    <select id="doFindObjects" resultType="map">
+        select a.*,(select b.name from sys_menus b where b.id=a.parentId) parentName
+               from sys_menus a
+    </select>
+
+    <insert id="doSaveObject">
+        insert into sys_menus 
+        values(#{menus.id},#{menus.name},#{menus.url},#{menus.type},#{menus.sort},#{menus.note},#{menus.parentId},#{menus.permission},now(),now(),#{menus.createdUser},#{menus.modifiedUser})
+    </insert>
+</mapper>

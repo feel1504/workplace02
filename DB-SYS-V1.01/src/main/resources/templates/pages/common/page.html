@@ -1,0 +1,159 @@
+<!--class="多个属性值" 多类组合选择器-->
+<ul class="pagination pagination-sm no-margin pull-right">
+    <li><a class="first">首页</a></li>
+	<li><a class="pre">上一页</a></li>
+	<li><a class="next">下一页</a></li>
+	<li><a class="last">尾页</a></li>
+	<li><a class="rowCount">总记录数(0)</a></li>
+	<li><a class="pageCount">总页数(0)</a></li>
+	<li><a class="pageCurrent">当前页(1)</a></li>
+</ul>
+<script type="text/javascript">
+  //
+  $(function(){
+	  //在pageId对象上注册click事件
+	  //当点击pageId对象内部的first,pre等元素时,
+	  //执行doJumpToPage事件处理函数.
+	  // doInitPagination();
+	  // doSetPagination();
+	  $("#pageId")
+	  .on("click",".first,.pre,.next,.last",doJumpToPage);
+  });
+  //分页事件处理
+  function doJumpToPage(){
+	  var cls = $(this).prop("class");
+	  var pageCurrent = $("#pageId").data("pageCurrent");
+	  var pageCount =  $("#pageId").data("pageCount");
+	  if(cls=="first" && pageCurrent != 1){
+		pageCurrent = 1;
+	  }else if(cls=="next" && pageCurrent<pageCount){
+	  	pageCurrent++;
+	  }else if(cls=="pre" && pageCurrent>0){
+	  	pageCurrent--;
+	  }else if(cls=="last" && pageCurrent!= pageCount){
+	  	pageCurrent = pageCount;
+	  }else{
+	  	// return;
+	  }
+	  $("#pageId").data("pageCurrent",pageCurrent);
+
+	  doGetObjects();
+	  /*//1.获取点击对象的class属性值
+	  //prop函数为jquery中获取对象属性值的一个函数
+	  //prop函数语法prop(属性名,[属性值])
+	  var cls=$(this).prop("class");
+	  //2.基于class属性值修改当前页码值
+	  //2.1获取当前页码值,总页数
+	  var pageCurrent= $("#pageId").data("pageCurrent");
+	  var pageCount=$("#pageId").data("pageCount");
+      //2.2修改页码值
+      if(cls=="first"){
+    	  pageCurrent=1;
+      }else if(cls=="next"&&pageCurrent<pageCount){
+    	  pageCurrent++;
+      }else if(cls=="pre"&&pageCurrent>0){
+    	  pageCurrent--;
+      }else if(cls=="last"){
+    	  pageCurrent=pageCount;
+      }else{return;}
+	  //3.基于新的页码值执行查询操作.
+	  $("#pageId").data("pageCurrent",pageCurrent);
+	  doGetObjects();*/
+  }
+  //初始化分页信息
+  function doInitPagination(){
+	//1.初始化总记录数
+	 $(".rowCount").html("总记录数(0)")
+	//2.初始化总页数
+	 $(".pageCount").html("总页数(0)")
+	//3.初始化当前页码值
+	 $(".pageCurrent").html("当前页(1)")
+  }
+
+  //设置分页信息
+  function doSetPagination(pageObject){
+	  //1.初始化总记录数
+	  $(".rowCount")
+	  .html("总记录数("+pageObject.data.rowCount+")")
+	  //2.初始化总页数
+	  $(".pageCount")
+	  .html("总页数("+pageObject.data.pageCount+")")
+	  //3.初始化当前页码值
+	  $(".pageCurrent")
+	  .html("当前页("+pageObject.data.pageCurrent+")")
+	  //4.存储当前页码值,总页数
+	  //data函数为juqery中的数据绑定函数
+	  //data函数语法data(key,[value])
+	  $("#pageId")
+	  .data("pageCurrent",pageObject.data.pageCurrent);
+	  $("#pageId")
+	  .data("pageCount",pageObject.data.pageCount);
+	  $("#pageId")
+			  .data("username",pageObject.data.username);
+  }
+  //以下错误代码
+  /*
+    function doGetObjects() {
+        //1、定义请求参数
+        var pageCurrent = $("#pageId").data("pageCurrent");
+        if (!pageCurrent) pageCurrent = 1;
+        var params = {"pageCurrent": pageCurrent};
+        var username = $("#searchNameId").val();//获取input的值
+        if (username) {
+            params.username = username.trim()
+        };
+        //2、定义请求url
+        var url = "log/doFindPageObjects"
+        //3、发送异步请求加载日志加载
+        //1)：getJSON为JQuery的框架中的函数
+        //2)：getJSON用于服务端发起get请求
+        //3)：getJSON会将服务器返回的JSON字符串转换为JSON格式的对象
+        //4)：function(result){}为回调函数，会在服务端数据响应到客户端以后执行
+        //5)：参数result，方法会将后端json字符串转换为json格式，赋值给result
+        $.getJSON(url, params, function (result) {
+            // console.log(result)
+            doHandleResponseResult(result);
+        });
+    };
+
+    function doHandleResponseResult(result) {
+        if (result.state == 1) {//请求正常
+            //呈现日志记录
+            //console.log(result.data.records)
+            //加载日志记录到页面
+            doSetPagination(result);//调方法设置页面数
+            doSetTableBodyRows(result.data.records);
+        } else {
+            alert(result.message) //异常
+        }
+    }
+
+    function doSetTableBodyRows(records) {
+        //获取tobody对象并清空里面内容
+        var tbody = $("#tbodyId");
+        tbody.empty();
+        //将记录添加到tbody
+        for (var i = 0; i < records.length; i++) {
+            //2.1创建tr对象
+            var tr = $("<tr></tr>")
+            //2.2创建多个td对象
+            var tds = doCreateTds(records[i]);
+            //2.3将td追加到tr中
+            tr.append(tds);
+            //2.4将tr追加到tbody中
+            tbody.append(tr);
+        }
+    }
+
+    function doCreateTds(record) {
+        var tds = "<td><input type='checkbox' class='cBox' name='cItem' value='" + record.id + "'></td>" +
+                "<td>" + record.username + "</td>" +
+                "<td>" + record.operation + "</td>" +
+                "<td>" + record.method + "</td>" +
+                "<td>" + record.params + "</td>" +
+                "<td>" + record.ip + "</td>" +
+                "<td>" + record.time + "</td>"
+        return tds;
+    }
+  */
+</script>

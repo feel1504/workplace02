@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.gzsxy.dao.AuthorDao">
+    <cache readOnly="true"/>
+    <insert id="insertById" parameterType="cn.gzsxy.pojo.Author">
+        insert into author values(null,#{username},#{password},#{nickname},#{email},#{phone},#{bio},now(),now())
+    </insert>
+    <select id="findAllLimit" resultType="cn.gzsxy.pojo.Author" parameterType="map">
+        select * from author limit #{start },#{rows}
+    </select>
+    <delete id="deleteByIds">
+        delete from author where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

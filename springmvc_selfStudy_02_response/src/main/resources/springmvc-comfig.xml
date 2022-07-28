@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc
+						http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+						http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						http://www.springframework.org/schema/context
+          				http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<!-- 1.配置前端控制器放行静态资源(html/css/js等，否则静态资源将无法访问) -->
+	<mvc:default-servlet-handler/>
+
+	<!--  前端控制器 那些静态资源不拦截(js、html、css、图片)-->
+	<!-- 设置静态资源不过滤 -->
+	<!--配置那些资源不会被前端控制器拦截-->
+	<mvc:resources mapping="**.png" location="/images/"/>
+	<mvc:resources mapping="**.css" location="/css/"/>
+	<mvc:resources mapping="**.js" location="/js/"/>
+
+
+	<!-- 2.配置注解驱动，用于识别注解（比如@Controller） -->
+	<mvc:annotation-driven/>
+	
+	<!-- 3.配置需要扫描的包：spring自动去扫描 base-package 下的类，
+		如果扫描到的类上有 @Controller、@Service、@Component等注解，
+		将会自动将类注册为bean 
+	 -->
+	<context:component-scan base-package="cn.gzsxy.controller"/>
+	
+	<!-- 4.配置内部资源视图解析器
+		prefix:配置路径前缀
+		suffix:配置文件后缀
+		View:home如何变成/WEB-INF/pages/home.jsp
+		拆分为前缀：/WEB-INF/pages/
+		拆分为后缀：.jsp
+		通过视图解析器一解析，拼接出来为：
+			/WEB-INF/pages/ + jsp资源名称 + .jsp
+			/WEB-INF/pages/home.jsp
+	 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/pages/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
+
+</beans>
