@@ -22,12 +22,17 @@ public class PageController {
         return "common/page";
     }
 
-    //基于rest框架风格返回某个模块的UI页面
     @RequestMapping("{model}/{ui}")
+    //基于rest框架风格返回某个模块的UI页面
     public String doModelUI(@PathVariable("ui") String ui){
         return "sys/"+ui;
     }
 
+    /**返回登录页面**/
+    @RequestMapping("/doLoginUI")
+    public String doLoginUI(){
+        return "login";
+    }
  /*   log/log_list
     @RequestMapping("log/log_list")
     public String doLogUI(){

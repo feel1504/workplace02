@@ -4,6 +4,7 @@ import com.cy.pj.common.exception.ServiceException;
 import com.cy.pj.common.vo.PageObject;
 import com.cy.pj.sys.dao.SysLogDao;
 import com.cy.pj.sys.entity.SysLog;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class SysLogServiceImpl implements SysLogService{
         return new PageObject<>(rowCount, records, pageCurrent, pageSize);
     }
 
+    @RequiresPermissions("sys:log:delete")
     @Override
     public int deleteObject(Integer... ids) {
         if(ids.length == 0 || ids==null){
