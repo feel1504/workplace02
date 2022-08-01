@@ -7,6 +7,8 @@ import com.cy.pj.sys.entity.SysLog;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +19,12 @@ import java.util.List;
  */
 
 @Service
+@Transactional(
+        rollbackFor = Throwable.class,
+        isolation = Isolation.READ_COMMITTED,//事务隔离级别
+        timeout = -1,//事务的超时时间，默认-1
+        readOnly = false//指定事务是否为只读事务，默认false
+)
 public class SysLogServiceImpl implements SysLogService{
     @Autowired
     private SysLogDao sysLogDao;

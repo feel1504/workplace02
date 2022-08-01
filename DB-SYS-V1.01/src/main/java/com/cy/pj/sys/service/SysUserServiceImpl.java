@@ -1,9 +1,11 @@
 package com.cy.pj.sys.service;
 
+import com.cy.pj.common.annotation.RequiredLog;
 import com.cy.pj.common.exception.ServiceException;
 import com.cy.pj.common.vo.PageObject;
 import com.cy.pj.common.vo.SysUserDeptVo;
 import com.cy.pj.sys.dao.SysUserDao;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,8 @@ public class SysUserServiceImpl implements SysUserService{
         return pageObject;
     }
 
+    @RequiredLog("禁用启用")
+    @RequiresPermissions("sys:user:valid")
     @Override
     public int doValidById(Integer id, Integer valid) {
         if(id==null || id<1){

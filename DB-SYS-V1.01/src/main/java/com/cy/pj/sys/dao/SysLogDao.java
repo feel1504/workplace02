@@ -33,22 +33,5 @@ public interface SysLogDao {
 
    int deleteObject(Integer ... ids);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   int insertObject(SysLog log);
 }
